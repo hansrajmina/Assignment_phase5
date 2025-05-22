@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pha5e Clone with Torchlight Effect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-color: #000;
+      --text-color: #fff;
+      --accent-color: #0ff;
+      --hover-color: #0ff;
+      --bg-shape: rgba(0, 255, 255, 0.3);
+      --header-bg: rgba(0, 0, 0, 0.6);
+      --header-text: #fff;
+    }
+
+    .light-mode {
+      --bg-color: #fff;
+      --text-color: #000;
+      --accent-color: #111;
+      --hover-color: #8B4513;
+      --bg-shape: rgba(0, 0, 0, 0.1);
+      --header-bg: rgba(255, 255, 255, 0.85);
+      --header-text: #000;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+
+    .site-header {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      background: linear-gradient(to right, #000428, #004e92);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.5s ease, border-color 0.5s ease;
+    }
+
+    .light-mode .site-header {
+      border-color: rgba(0, 0, 0, 0.1);
+      background: var(--header-bg);
+    }
+
+    .site-header .navbar-brand {
+      color: #8B4513; /* Wooden */
+      font-weight: bold;
+      font-size: 1.5rem;
+      transition: color 0.3s;
+    }
+
+    .site-header .nav-link {
+      color: var(--header-text);
+      position: relative;
+      margin-right: 1rem;
+      transition: color 0.3s;
+    }
+
+    .site-header .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--hover-color);
+      transition: width 0.3s;
+    }
+
+    .site-header .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .site-header .nav-link:hover {
+      color: var(--hover-color);
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: var(--header-text);
+      transition: color 0.3s;
+    }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 120px;
+      text-align: center;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .hero-title {
+      font-size: 4rem;
+      font-weight: bold;
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    .hero-title:hover {
+      transform: scale(1.05);
+      color: var(--hover-color);
+    }
+
+    .background-shape {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--bg-shape), transparent);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: -1;
+      transition: background 0.5s ease;
+    }
+
+    .torchlight {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      background: radial-gradient(circle 150px at var(--x, 50%) var(--y, 50%), rgba(24, 177, 7, .8), transparent 40%);
+      mix-blend-mode: screen;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    body:not(.light-mode) .torchlight {
+      opacity: 1;
+    }
+
+    /* Torchlight effect for light mode */
+    body.light-mode .torchlight {
+      background: radial-gradient(circle 150px at var(--x, 50%) var(--y, 50%), rgba(0, 0, 0, 0.6), transparent 40%);
+      mix-blend-mode: multiply;
+      opacity: 1;
+    }
+
+    /* Responsive Media Queries */
+    @media (max-width: 992px) {
+      .hero-title {
+        font-size: 3rem;
+      }
+
+      .site-header .nav-link {
+        margin-right: 0.75rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .site-header {
+        padding: 0.8rem 1rem;
+      }
+
+      .site-header .navbar-brand {
+        font-size: 1.3rem;
+      }
+
+      .site-header .nav-link {
+        font-size: 0.95rem;
+        margin-right: 0.5rem;
+      }
+
+      .theme-toggle {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .lead {
+        font-size: 1rem;
+      }
+
+      .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .site-header nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container-fluid d-flex justify-content-between align-items-center flex-wrap">
+      <a href="#" class="navbar-brand">PHA5E</a>
+      <nav class="d-flex align-items-center flex-wrap">
+        <a class="nav-link" href=" https://www.pha5e.com/">Our Vision</a>
+        <a class="nav-link" href=" https://www.pha5e.com/en/team">Our Team</a>
+        <a class="nav-link" href=" https://www.pha5e.com/en/projects">Our Projects</a>
+        <a class="nav-link" href=" https://www.pha5e.com/en/contact">Contact</a>
+        <span class="theme-toggle ms-3" onclick="toggleTheme()" title="Toggle theme">🌓</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="background-shape" id="bgShape"></div>
+    <div>
+      <h1 class="hero-title" id="heroTitle">WE ARE A GLOBEL STUDIO</h1>
+      <p class="lead">A new phase of innovation</p>
+    </div>
+  </section>
+
+  <!-- Torchlight Layer -->
+  <div class="torchlight" id="torch"></div>
+
+  <!-- GSAP -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script>
+    // GSAP Entry Animations
+    gsap.from(".hero-title", {
+      opacity: 0,
+      y: 100,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".lead", {
+      opacity: 0,
+      delay: 0.5,
+      y: 50,
+      duration: 1,
+      ease: "power2.out"
+    });
+
+    gsap.from(".site-header", {
+      y: -100,
+      opacity: 0,
+      duration: 1,
+      ease: "power2.out"
+    });
+
+    // Mouse Movement Torchlight & Shape
+    document.addEventListener("mousemove", (e) => {
+      const shape = document.getElementById("bgShape");
+      const x = (e.clientX / window.innerWidth - 0.5) * 100;
+      const y = (e.clientY / window.innerHeight - 0.5) * 100;
+
+      gsap.to(shape, {
+        x: x,
+        y: y,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+
+      const torch = document.getElementById("torch");
+      torch.style.setProperty("--x", e.clientX + "px");
+      torch.style.setProperty("--y", e.clientY + "px");
+    });
+
+    // Theme Toggle
+    function toggleTheme() {
+      document.body.classList.toggle("light-mode");
+    }
+  </script>
+</body>
+</html>
